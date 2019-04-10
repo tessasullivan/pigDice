@@ -25,32 +25,35 @@ Game.prototype.turn = function(die1) {
     this.turnScore = 0;
     return "Your turn is OVER";
   } else {
-    this.turnScore += this.roll;
+    this.turnScore += die1;
     return "You can go again";
   }
 }
 
-function Player (playerNumber, totalScore) {
-  this.playerNumber = playerNumber,
-  this.totalScore = totalScore
-
+// User chooses to hold
+Player.prototype.hold = function() {
+  this.totalScore += game.turnScore;
+  console.log(this.totalScore);
 }
 
-// function turnScore ()
+function Player (playerNumber, totalScore) {
+  //maybe this is right?
+  // this.player1 = player1,
+  // this.player2 = player2,
+  this.playerNumber = playerNumber,
+  this.totalScore = totalScore
+}
+
 
 
 Player.prototype.increaseScore = function(points) {
   return this.totalScore += points;
 }
 
-
-
 function rollDie() {
   var die1 = Math.floor(Math.random() * 6) + 1;
   return die1;
 }
-
-
 
 // User logic
 // Player 1 rolls die, if 1 turn ends, otherwise temp score = die
@@ -68,22 +71,11 @@ game.addPlayer(player1);
 game.addPlayer(player2);
 
 
-// function playGame () {
-//   // while both total scores are less than 100
-//   // Player rolls die
-//   // Games displays result
-//   // if die roll is 1, play moves to next player and no points are added to initial player
-//   // else game gives user option to hold or roll again
-//   // if user holds, then their total score increases by the turn score
-//   // else
-// }
-
-
 function displayScore (gameToDisplay) {
   var scoreBoard = $("ul#displayScore");
   var htmlForScoreBoard = "";
   game.players.forEach(function(player) {
-    htmlForScoreBoard += "<li>" + " " + player.playerNumber + " " + player.turnScore + " " + player.totalScore + "</li>";
+    htmlForScoreBoard += "<li>" + " " + player.playerNumber + ": " + "Turn Score: " + game.turnScore + " " + "Total Score: " + player.totalScore + "</li>";
   });
   scoreBoard.html(htmlForScoreBoard);
 }
@@ -92,14 +84,18 @@ function displayScore (gameToDisplay) {
 
 $().ready(function() {
 
-  $('form#pigDice').submit(function(event) {
-    event.preventDefault();
+
+  $('button#roll').click(function() {
     var die1 = rollDie();
 
     var results = game.turn(die1);
-//    displayScore (game);
+
+    displayScore (game);
     $('#result').text(results);
     $('#die1').text(die1);
   });
 
+  $('button#hold').click(function() {
+    player1.hold();
+  });
 });
