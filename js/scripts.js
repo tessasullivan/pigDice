@@ -43,7 +43,8 @@ Game.prototype.turn = function(roll) {
 
 // Method which checks whether or not the winning score has been reached
 Game.prototype.checkForWin = function() {
-  if(this.getCurrentPlayer().totalScore + this.turnScore >=  10) {
+  if(this.getCurrentPlayer().totalScore + this.turnScore >=  100) {
+    this.getCurrentPlayer().totalScore += this.turnScore;
     this.gameOver = true;
   }
   return this.gameOver;
@@ -78,15 +79,6 @@ function displayScore(gameToDisplay) {
   var scoreBoard = $("ul#displayScore");
   var htmlForScoreBoard = "";
 
- // Figure out who has the turnScore and set
-  var player1TurnScore = 0;
-  var player2TurnScore = 0;
-  if (game.getCurrentPlayer().playerNumber === "Player 1"){
-    player1TurnScore = game.turnScore;
-  } else {
-    player2TurnScore = game.turnScore;
-  }
-
   $("#playerName").text(game.getCurrentPlayer().playerNumber);
   $("#turnScore").text(game.turnScore);
   //
@@ -108,12 +100,12 @@ $().ready(function() {
 
     var rollResult = rollDie();
     var results = game.turn(rollResult);
+    $('#currentScore').show();
     var endGame = game.checkForWin();
     if (endGame) {
       // Hide the die form and announce winner
       $(".container").hide();
-      console.log(game.getCurrentPlayer());
-      $('#result').text("Winner is " + game.getCurrentPlayer().playerNumber);
+      $('#result').html("<h1>Winner is " + game.getCurrentPlayer().playerNumber + "</h1>");
     } else {
       // keep playing
       $('#result').text(results);

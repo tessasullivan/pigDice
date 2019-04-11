@@ -1,12 +1,12 @@
 .dice{
-	float:left;
+	/* float: right; */
 	width:32px;
 	background:#F5F5F5;
 	border:#999 1px solid;
 	padding:10px;
 	font-size:24px;
 	text-align:center;
-	margin:5px;
+	margin-left: 540px;
 }
 .btn {
   background-color: pink;
@@ -15,4 +15,26 @@
 
 ul {
   list-style-type: none;
+	text-align: center;
+	font-size: 30px;
+	/* border: 1px solid black; */
+}
+
+.container {
+	text-align: center;
+	margin-top: 150px;
+
+}
+#currentScore {
+	display: none;
+}
+
+body {
+		background-image: url(https://img-aws.ehowcdn.com/750x428p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/fcaee3c3319e42dda815af5177d43b55);
+}
+h1 {
+	text-align: center;
+	color: deeppink;
+	font-family: fantasy;
+	font-size: 50px;
 }
