@@ -5,97 +5,99 @@
 // turnScore moves to become a property of Game
 // player just needs total score
 
-
-
 function Game () {
   this.players = [],
   this.turnScore = 0,
-  this.roll = 0
-  // this.currentId = 0
+  this.roll = 0,
+  this.currentPlayerIndex = 0;
+  this.numberOfPlayers = 0;
+  this.gameOver = false;
 }
 
-Game.prototype.addPlayer = function (player) {
+Game.prototype.addPlayer = function (newPlayer) {
   // player.id = this.assignId();
-  this.players.push(player);
+  this.players.push(newPlayer);
+  this.numberOfPlayers++;
+}
+
+Game.prototype.getCurrentPlayer = function() {
+  return this.players[this.currentPlayerIndex];
+}
+
+//method that advances to next player
+Game.prototype.nextPlayer = function() {
+  if (this.currentPlayerIndex === this.numberOfPlayers-1) {
+    this.currentPlayerIndex = 0;
+  } else {
+    this.currentPlayerIndex++;
+  }
+  this.turnScore = 0;
 }
 
 // returns whose turn it is
-Game.prototype.turn = function(die1) {
-  if (die1 === 1) {
-    this.turnScore = 0;
-    return "Your turn is OVER";
+Game.prototype.turn = function(roll) { //performs logic, returns if same pla
+  if (roll === 1) {
+    this.nextPlayer();
+    // return "Your turn is OVER";
   } else {
-    this.turnScore += die1;
-    return "You can go again";
+    this.turnScore += roll;
+  }
+}
+
+Game.prototype.checkForWin = function() {
+  if(this.getCurrentPlayer().totalScore + this.turnScore >=  100) {
+    this.gameOver = true;
   }
 }
 
 // User chooses to hold
-Player.prototype.hold = function() {
-  this.totalScore += game.turnScore;
-  console.log(this.totalScore);
+Game.prototype.hold = function() {
+  this.getCurrentPlayer().totalScore += this.turnScore;
+  this.nextPlayer();
 }
 
 function Player (playerNumber, totalScore) {
   //maybe this is right?
-  // this.player1 = player1,
-  // this.player2 = player2,
   this.playerNumber = playerNumber,
   this.totalScore = totalScore
 }
 
-
-
-Player.prototype.increaseScore = function(points) {
-  return this.totalScore += points;
-}
-
 function rollDie() {
-  var die1 = Math.floor(Math.random() * 6) + 1;
-  return die1;
+  return Math.floor(Math.random() * 6) + 1;
 }
 
 // User logic
 // Player 1 rolls die, if 1 turn ends, otherwise temp score = die
 var game = new Game();
-var player1 = new Player(
-  playerNumber = "Player 1",
-  totalScore = 0
-);
-var player2 = new Player(
-  playerNumber = "Player 2",
-  totalScore = 0
-);
-
-game.addPlayer(player1);
-game.addPlayer(player2);
+game.addPlayer(new Player("Player 1", 0, 0));
+game.addPlayer(new Player("Player 2", 0, 0));
+console.log(game);
 
 
-function displayScore (gameToDisplay) {
+function displayScore(gameToDisplay) {
   var scoreBoard = $("ul#displayScore");
   var htmlForScoreBoard = "";
   game.players.forEach(function(player) {
     htmlForScoreBoard += "<li>" + " " + player.playerNumber + ": " + "Turn Score: " + game.turnScore + " " + "Total Score: " + player.totalScore + "</li>";
   });
   scoreBoard.html(htmlForScoreBoard);
+  $("#playerName").text(game.getCurrentPlayer().playerNumber);
 }
 
 
 
 $().ready(function() {
 
-
   $('button#roll').click(function() {
-    var die1 = rollDie();
-
-    var results = game.turn(die1);
-
-    displayScore (game);
+    var rollResult = rollDie();
+    var results = game.turn(rollResult);
     $('#result').text(results);
-    $('#die1').text(die1);
+    $('#die1').text(rollResult);
   });
-
   $('button#hold').click(function() {
-    player1.hold();
+    game.hold();
   });
+  $("button").click(function() {
+    displayScore(game);
+  })
 });

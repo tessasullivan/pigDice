@@ -1,5 +1,5 @@
 function Game () {
-  this.players = [],
+  this.players = [], //some number of players
   this.currentPlayer = 0, //index of current player, 0 or 1
   // this.turnScore = 0,
   this.roll = 0
@@ -57,19 +57,16 @@ function displayScore (gameToDisplay) {
 }
 
 var game = new Game();
-var player1 = new Player(
-  playerNumber = "Player 1",
-  turnScore = 0,
-  totalScore = 0
-);
-var player2 = new Player(
-  playerNumber = "Player 2",
-  turnScore = 0,
-  totalScore = 0
-);
+
+var player1 = new Player("Player 1", 0, 0);
+var player2 = new Player("Player 2", 0, 0);
 
 game.addPlayer(player1);
 game.addPlayer(player2);
+
+console.log(game.players);
+
+//  [{playernumber: "Player2"}, player2]
 
 // while (player1.totalScore < 100 && player2.totalScore < 100){
 //   var die1 = game.players[game.currentPlayer].rollDie();
