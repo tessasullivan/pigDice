@@ -43,9 +43,10 @@ Game.prototype.turn = function(roll) {
 
 // Method which checks whether or not the winning score has been reached
 Game.prototype.checkForWin = function() {
-  if(this.getCurrentPlayer().totalScore + this.turnScore >=  100) {
+  if(this.getCurrentPlayer().totalScore + this.turnScore >=  10) {
     this.gameOver = true;
   }
+  return this.gameOver;
 }
 
 // Method which adds turn score to player's total score and advances to the next player
@@ -76,11 +77,25 @@ game.addPlayer(new Player("Player 2", 0, 0));
 function displayScore(gameToDisplay) {
   var scoreBoard = $("ul#displayScore");
   var htmlForScoreBoard = "";
-  game.players.forEach(function(player) {
-    htmlForScoreBoard += "<li>" + " " + player.playerNumber + ": " + "Turn Score: " + game.turnScore + " " + "Total Score: " + player.totalScore + "</li>";
-  });
-  scoreBoard.html(htmlForScoreBoard);
+
+ // Figure out who has the turnScore and set
+  var player1TurnScore = 0;
+  var player2TurnScore = 0;
+  if (game.getCurrentPlayer().playerNumber === "Player 1"){
+    player1TurnScore = game.turnScore;
+  } else {
+    player2TurnScore = game.turnScore;
+  }
+
   $("#playerName").text(game.getCurrentPlayer().playerNumber);
+  $("#turnScore").text(game.turnScore);
+  //
+  game.players.forEach(function(player) {
+    htmlForScoreBoard += "<li>" + " " + player.playerNumber + ": " +  " " + "Total Score: " + player.totalScore + "</li>";
+  });
+
+  scoreBoard.html(htmlForScoreBoard);
+
 }
 
 
@@ -93,8 +108,18 @@ $().ready(function() {
 
     var rollResult = rollDie();
     var results = game.turn(rollResult);
-    $('#result').text(results);
-    $('#die1').text(rollResult);
+    var endGame = game.checkForWin();
+    if (endGame) {
+      // Hide the die form and announce winner
+      $(".container").hide();
+      console.log(game.getCurrentPlayer());
+      $('#result').text("Winner is " + game.getCurrentPlayer().playerNumber);
+    } else {
+      // keep playing
+      $('#result').text(results);
+      $('#die1').text(rollResult);
+    }
+
   });
   $('button#hold').click(function() {
     game.hold();
