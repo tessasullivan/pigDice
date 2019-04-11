@@ -105,7 +105,7 @@ $().ready(function() {
     if (endGame) {
       // Hide the die form and announce winner
       $(".container").hide();
-      $('#result').html("<h1>Winner is " + game.getCurrentPlayer().playerNumber + "</h1>");
+      $('#result').html("<h1 class='animated lightSpeedIn'>Winner is " + game.getCurrentPlayer().playerNumber + "</h1>");
     } else {
       // keep playing
       $('#result').text(results);
