@@ -1,9 +1,5 @@
+//////////////////
 //Business logic
-
-// Game method for advance
-// Game method for stop
-// turnScore moves to become a property of Game
-// player just needs total score
 
 function Game () {
   this.players = [],
@@ -14,17 +10,19 @@ function Game () {
   this.gameOver = false;
 }
 
+// Method adds player to game object
 Game.prototype.addPlayer = function (newPlayer) {
-  // player.id = this.assignId();
   this.players.push(newPlayer);
   this.numberOfPlayers++;
 }
 
+// Method to get the current player from the game object
 Game.prototype.getCurrentPlayer = function() {
   return this.players[this.currentPlayerIndex];
 }
 
-//method that advances to next player
+// Method that advances to next player
+// and sets turnScore to 0
 Game.prototype.nextPlayer = function() {
   if (this.currentPlayerIndex === this.numberOfPlayers-1) {
     this.currentPlayerIndex = 0;
@@ -34,30 +32,30 @@ Game.prototype.nextPlayer = function() {
   this.turnScore = 0;
 }
 
-// returns whose turn it is
-Game.prototype.turn = function(roll) { //performs logic, returns if same pla
+// Method determines whose turn it is based on roll results
+Game.prototype.turn = function(roll) {
   if (roll === 1) {
     this.nextPlayer();
-    // return "Your turn is OVER";
   } else {
     this.turnScore += roll;
   }
 }
 
+// Method which checks whether or not the winning score has been reached
 Game.prototype.checkForWin = function() {
   if(this.getCurrentPlayer().totalScore + this.turnScore >=  100) {
     this.gameOver = true;
   }
 }
 
-// User chooses to hold
+// Method which adds turn score to player's total score and advances to the next player
 Game.prototype.hold = function() {
   this.getCurrentPlayer().totalScore += this.turnScore;
   this.nextPlayer();
 }
 
+// Player constructor
 function Player (playerNumber, totalScore) {
-  //maybe this is right?
   this.playerNumber = playerNumber,
   this.totalScore = totalScore
 }
@@ -66,14 +64,15 @@ function rollDie() {
   return Math.floor(Math.random() * 6) + 1;
 }
 
+////////////////////////////////////////////
 // User logic
-// Player 1 rolls die, if 1 turn ends, otherwise temp score = die
+// Instantiate the game and add the players
 var game = new Game();
 game.addPlayer(new Player("Player 1", 0, 0));
 game.addPlayer(new Player("Player 2", 0, 0));
-console.log(game);
+//console.log(game);
 
-
+// Displays the score for both players as well as whose turn it is
 function displayScore(gameToDisplay) {
   var scoreBoard = $("ul#displayScore");
   var htmlForScoreBoard = "";
@@ -89,6 +88,9 @@ function displayScore(gameToDisplay) {
 $().ready(function() {
 
   $('button#roll').click(function() {
+    // roll die, check if game is over
+    // if over, hide the dice and buttons and announce winner
+
     var rollResult = rollDie();
     var results = game.turn(rollResult);
     $('#result').text(results);
